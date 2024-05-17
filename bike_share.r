@@ -26,3 +26,18 @@ colnames(q1_2020)
                    ,end_station_id = to_station_id
                    ,member_casual = usertype
                    ))
+#Inspect the dataframes and look for incongruencies
+str(q1_2019)
+str(q1_2020)
+
+# Convert ride_id and rideable_type to character so that they can stack correctly
+q1_2019 <-  mutate(q1_2019, ride_id = as.character(ride_id)
+                   ,rideable_type = as.character(rideable_type))
+
+# Stack individual quarter's data frames into one big data frame
+all_trips <- bind_rows(q1_2019, q1_2020)#, q3_2019)#, q4_2019, q1_2020)
+
+# Remove lat, long, birthyear, and gender fields as this data was dropped beginning in 2020
+all_trips <- all_trips %>%  
+  select(-c(start_lat, start_lng, end_lat, end_lng, birthyear, gender,  "tripduration"))
+
